@@ -3,7 +3,7 @@
 #include <iostream>
 #include <array>
 
-template<typename T, std::size_t capasity>
+template<typename T, std::size_t capacity>
 class circular_buffer
 {
     public:
@@ -18,12 +18,14 @@ class circular_buffer
             std::lock_guard<std::mutex> lock(m);
             buf[head] = item;
 
-            if (size++ == capasity)
+            if (size++ == capacity)
             {
-                tail = (tail + 1) % capasity;
+                tail = (tail + 1) % capacity;
             }
 
-            head = (head + 1) % capasity;
+            head = (head + 1) % capacity;
+
+            std::cout << "put head: " << head << " tail: " << tail << std::endl;
         }
 
         T get()
@@ -36,13 +38,28 @@ class circular_buffer
 
             auto val = buf[tail];
             size--;
-            tail = (tail + 1) % capasity;
+            tail = (tail + 1) % capacity;
+
+            std::cout << "get head: " << head << " tail: " << tail << std::endl;
 
             return val;
         }
 
+        const T& operator[] (std::size_t i)
+        {
+            auto index = (tail + i) % capacity;
+            if ( i < 0 || index > head || size == 0)
+            {                
+                throw std::invalid_argument("Index out of boundaries");
+            }
+
+            std::cout << "[] index: " << index << " head: " << head << " tail: " << tail << std::endl;
+
+            return buf[index];
+        }
+
     private:
-        std::array<T, capasity> buf;
+        std::array<T, capacity> buf;
 
         std::mutex m;
         std::size_t size;
@@ -54,16 +71,17 @@ int main()
 {
     std::cout << "Hi there!" << std::endl;
 
-    circular_buffer<int, 3> buf;
+    circular_buffer<int, 5> buf;
     buf.put(0);
     buf.put(1);
-    buf.put(2);
-    std::cout << "Pop: " << buf.get() << std::endl;
+    buf.put(2);    
+    buf.get();
+    buf[1];
     buf.put(3);
-    std::cout << "Pop: " << buf.get() << std::endl;
-    std::cout << "Pop: " << buf.get() << std::endl;
-    std::cout << "Pop: " << buf.get() << std::endl;
-
-
+    buf.get();
+    buf.get();
+    buf.get();
+    buf[1];
+    
     return 0;
 }
