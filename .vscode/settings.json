@@ -1,3 +1,9 @@
 {
-    "C_Cpp.default.configurationProvider": "go2sh.cmake-integration"
+    "C_Cpp.default.configurationProvider": "go2sh.cmake-integration",
+    "files.associations": {
+        "*.daemon": "makefile",
+        "*.include": "makefile",
+        "*.tds": "todo",
+        "array": "cpp"
+    }
 }

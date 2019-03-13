@@ -1,3 +1,4 @@
+#include <string>
 #include <exception>
 #include <mutex>
 #include <iostream>
@@ -71,13 +72,13 @@ int main()
 {
     std::cout << "Hi there!" << std::endl;
 
-    circular_buffer<int, 5> buf;
-    buf.put(0);
-    buf.put(1);
-    buf.put(2);    
-    buf.get();
+    circular_buffer<std::string, 5> buf;
+    buf.put("0");
+    buf.put("1");
+    buf.put("2");    
+    std::cout << buf.get() << '\n';
     buf[1];
-    buf.put(3);
+    buf.put("3");
     buf.get();
     buf.get();
     buf.get();
